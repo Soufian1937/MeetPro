@@ -11,8 +11,11 @@ import {
   BarChart3,
   Bell
 } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import Header from "@/components/Header";
 
 const Dashboard = () => {
+  const { user } = useAuth();
   const events = [
     {
       id: 1,
@@ -65,34 +68,17 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="border-b bg-card/50 backdrop-blur-sm">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <Calendar className="h-8 w-8 text-primary" />
-              <div>
-                <h1 className="text-2xl font-bold">Dashboard</h1>
-                <p className="text-muted-foreground">Gérez vos événements et réservations</p>
-              </div>
-            </div>
-            <div className="flex items-center space-x-4">
-              <Button variant="outline" size="icon">
-                <Bell className="h-4 w-4" />
-              </Button>
-              <Button variant="outline" size="icon">
-                <Settings className="h-4 w-4" />
-              </Button>
-              <Button variant="hero">
-                <Plus className="h-4 w-4 mr-2" />
-                Nouvel événement
-              </Button>
-            </div>
-          </div>
+    <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-primary/5">
+      <Header />
+      <div className="container mx-auto px-4 py-8">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold mb-2">
+            Bienvenue, {user?.user_metadata?.first_name || 'Utilisateur'} !
+          </h1>
+          <p className="text-muted-foreground">
+            Gérez vos rendez-vous et réunions facilement
+          </p>
         </div>
-      </header>
-
-      <main className="container mx-auto px-4 py-8">
         {/* Stats Cards */}
         <div className="grid md:grid-cols-4 gap-6 mb-8">
           <Card className="card-hover">
@@ -208,7 +194,7 @@ const Dashboard = () => {
             </CardContent>
           </Card>
         </div>
-      </main>
+      </div>
     </div>
   );
 };

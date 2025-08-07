@@ -1,9 +1,14 @@
 import { Button } from "@/components/ui/button";
-import { Calendar, Menu, X } from "lucide-react";
+import { Calendar, Menu, X, LogOut, User } from "lucide-react";
 import { useState } from "react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { useAuth } from '@/hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -29,8 +34,35 @@ const Header = () => {
         </nav>
 
         <div className="hidden md:flex items-center space-x-4">
-          <Button variant="ghost">Se connecter</Button>
-          <Button variant="hero">Commencer</Button>
+          {user ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost">
+                  <User className="h-4 w-4 mr-2" />
+                  {user.user_metadata?.first_name || 'Mon compte'}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem onClick={() => navigate('/dashboard')}>
+                  <Calendar className="h-4 w-4 mr-2" />
+                  Dashboard
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={signOut}>
+                  <LogOut className="h-4 w-4 mr-2" />
+                  Déconnexion
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <>
+              <Button variant="ghost" onClick={() => navigate('/auth')}>
+                Se connecter
+              </Button>
+              <Button variant="hero" onClick={() => navigate('/auth')}>
+                Commencer
+              </Button>
+            </>
+          )}
         </div>
 
         {/* Mobile Menu Button */}
@@ -58,8 +90,25 @@ const Header = () => {
               Contact
             </a>
             <div className="flex flex-col space-y-2 pt-4 border-t">
-              <Button variant="ghost">Se connecter</Button>
-              <Button variant="hero">Commencer</Button>
+              {user ? (
+                <>
+                  <Button variant="ghost" onClick={() => navigate('/dashboard')}>
+                    Dashboard
+                  </Button>
+                  <Button variant="ghost" onClick={signOut}>
+                    Déconnexion
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button variant="ghost" onClick={() => navigate('/auth')}>
+                    Se connecter
+                  </Button>
+                  <Button variant="hero" onClick={() => navigate('/auth')}>
+                    Commencer
+                  </Button>
+                </>
+              )}
             </div>
           </nav>
         </div>
