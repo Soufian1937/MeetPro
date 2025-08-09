@@ -1,8 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { Calendar, Clock, Users, Zap } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import heroImage from "@/assets/hero-calendar.jpg";
 
 const Hero = () => {
+  const navigate = useNavigate();
+
   return (
     <section className="relative overflow-hidden bg-gradient-to-br from-background via-background to-secondary/30">
       <div className="container mx-auto px-4 py-20 lg:py-32">
@@ -23,10 +26,20 @@ const Hero = () => {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button variant="hero" size="lg" className="text-lg px-8 py-6">
+              <Button 
+                variant="hero" 
+                size="lg" 
+                className="text-lg px-8 py-6"
+                onClick={() => navigate('/auth')}
+              >
                 Commencer gratuitement
               </Button>
-              <Button variant="outline" size="lg" className="text-lg px-8 py-6">
+              <Button 
+                variant="outline" 
+                size="lg" 
+                className="text-lg px-8 py-6"
+                onClick={() => navigate('/auth')}
+              >
                 Voir la démo
               </Button>
             </div>
