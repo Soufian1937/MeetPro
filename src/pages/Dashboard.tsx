@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
 import { 
   Calendar, 
   Plus, 
@@ -9,63 +10,68 @@ import {
   Video, 
   Settings,
   BarChart3,
-  Bell
+  Bell,
+  Phone,
+  Trash2,
+  Edit
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { useEvents } from "@/hooks/useEvents";
 import Header from "@/components/Header";
+import CreateEventDialog from "@/components/CreateEventDialog";
+import { format } from "date-fns";
+import { fr } from "date-fns/locale";
 
 const Dashboard = () => {
   const { user } = useAuth();
-  const events = [
-    {
-      id: 1,
-      title: "Consultation Business",
-      duration: "30 min",
-      bookings: 12,
-      status: "active",
-      type: "video"
-    },
-    {
-      id: 2,
-      title: "Entretien d'embauche",
-      duration: "45 min",
-      bookings: 8,
-      status: "active",
-      type: "physical"
-    },
-    {
-      id: 3,
-      title: "Réunion équipe",
-      duration: "60 min",
-      bookings: 5,
-      status: "draft",
-      type: "video"
-    }
-  ];
+  const { events, bookings, loading, deleteEvent, updateEvent } = useEvents();
 
-  const recentBookings = [
-    {
-      id: 1,
-      title: "Consultation Business",
-      client: "Marie Dubois",
-      date: "2024-08-08 14:30",
-      status: "confirmed"
-    },
-    {
-      id: 2,
-      title: "Entretien d'embauche",
-      client: "Pierre Martin",
-      date: "2024-08-09 10:00",
-      status: "pending"
-    },
-    {
-      id: 3,
-      title: "Réunion équipe",
-      client: "Équipe Marketing",
-      date: "2024-08-10 16:00",
-      status: "confirmed"
+  const getLocationIcon = (type: string) => {
+    switch (type) {
+      case 'video':
+        return <Video className="h-4 w-4 text-primary" />;
+      case 'physical':
+        return <Users className="h-4 w-4 text-primary" />;
+      case 'phone':
+        return <Phone className="h-4 w-4 text-primary" />;
+      default:
+        return <Video className="h-4 w-4 text-primary" />;
     }
-  ];
+  };
+
+  const getLocationLabel = (type: string) => {
+    switch (type) {
+      case 'video':
+        return 'Visioconférence';
+      case 'physical':
+        return 'En personne';
+      case 'phone':
+        return 'Téléphone';
+      default:
+        return 'Visioconférence';
+    }
+  };
+
+  const getBookingCount = (eventId: string) => {
+    return bookings.filter(booking => booking.event_type_id === eventId).length;
+  };
+
+  const handleDeleteEvent = async (eventId: string) => {
+    if (confirm('Êtes-vous sûr de vouloir supprimer cet événement ?')) {
+      await deleteEvent(eventId);
+    }
+  };
+
+  const toggleEventStatus = async (eventId: string, currentStatus: boolean) => {
+    await updateEvent(eventId, { is_active: !currentStatus });
+  };
+
+  // Calculs des statistiques
+  const totalBookings = bookings.length;
+  const activeEvents = events.filter(e => e.is_active).length;
+  const confirmedBookings = bookings.filter(b => b.status === 'confirmed').length;
+  const conversionRate = totalBookings > 0 ? Math.round((confirmedBookings / totalBookings) * 100) : 0;
+  const uniqueClients = new Set(bookings.map(b => b.client_email)).size;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-primary/5">
@@ -87,8 +93,10 @@ const Dashboard = () => {
               <Calendar className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">25</div>
-              <p className="text-xs text-muted-foreground">+12% ce mois</p>
+              <div className="text-2xl font-bold">{totalBookings}</div>
+              <p className="text-xs text-muted-foreground">
+                {totalBookings > 0 ? `${confirmedBookings} confirmées` : 'Aucune réservation'}
+              </p>
             </CardContent>
           </Card>
 
@@ -98,8 +106,10 @@ const Dashboard = () => {
               <Clock className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">8</div>
-              <p className="text-xs text-muted-foreground">3 nouveaux</p>
+              <div className="text-2xl font-bold">{activeEvents}</div>
+              <p className="text-xs text-muted-foreground">
+                {events.length - activeEvents} inactifs
+              </p>
             </CardContent>
           </Card>
 
@@ -109,8 +119,10 @@ const Dashboard = () => {
               <BarChart3 className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">68%</div>
-              <p className="text-xs text-muted-foreground">+5% vs mois dernier</p>
+              <div className="text-2xl font-bold">{conversionRate}%</div>
+              <p className="text-xs text-muted-foreground">
+                {confirmedBookings}/{totalBookings} confirmées
+              </p>
             </CardContent>
           </Card>
 
@@ -120,8 +132,10 @@ const Dashboard = () => {
               <Users className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">18</div>
-              <p className="text-xs text-muted-foreground">7 nouveaux</p>
+              <div className="text-2xl font-bold">{uniqueClients}</div>
+              <p className="text-xs text-muted-foreground">
+                {uniqueClients > 0 ? 'clients différents' : 'Aucun client'}
+              </p>
             </CardContent>
           </Card>
         </div>
@@ -132,41 +146,90 @@ const Dashboard = () => {
             <CardHeader>
               <CardTitle className="flex items-center justify-between">
                 Mes événements
-                <Button variant="outline" size="sm">
-                  <Plus className="h-4 w-4 mr-2" />
-                  Créer
-                </Button>
+                <CreateEventDialog>
+                  <Button variant="outline" size="sm">
+                    <Plus className="h-4 w-4 mr-2" />
+                    Créer
+                  </Button>
+                </CreateEventDialog>
               </CardTitle>
               <CardDescription>
                 Gérez vos types d'événements et leurs paramètres
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              {events.map((event) => (
-                <div key={event.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-accent/50 transition-colors">
-                  <div className="flex items-center space-x-4">
-                    <div className="p-2 rounded-full bg-primary/10">
-                      {event.type === "video" ? (
-                        <Video className="h-4 w-4 text-primary" />
-                      ) : (
-                        <Users className="h-4 w-4 text-primary" />
-                      )}
+              {loading ? (
+                // Skeleton loading
+                Array.from({ length: 3 }).map((_, i) => (
+                  <div key={i} className="flex items-center justify-between p-4 border rounded-lg">
+                    <div className="flex items-center space-x-4">
+                      <Skeleton className="h-10 w-10 rounded-full" />
+                      <div className="space-y-2">
+                        <Skeleton className="h-4 w-32" />
+                        <Skeleton className="h-3 w-24" />
+                      </div>
                     </div>
-                    <div>
-                      <h4 className="font-medium">{event.title}</h4>
-                      <p className="text-sm text-muted-foreground">{event.duration} • {event.bookings} réservations</p>
+                    <div className="flex items-center space-x-2">
+                      <Skeleton className="h-6 w-16" />
+                      <Skeleton className="h-8 w-8" />
                     </div>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <Badge variant={event.status === "active" ? "default" : "secondary"}>
-                      {event.status}
-                    </Badge>
-                    <Button variant="ghost" size="sm">
-                      <Settings className="h-4 w-4" />
+                ))
+              ) : events.length === 0 ? (
+                <div className="text-center py-8">
+                  <Calendar className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                  <h3 className="text-lg font-medium mb-2">Aucun événement</h3>
+                  <p className="text-muted-foreground mb-4">
+                    Créez votre premier type d'événement pour commencer à recevoir des réservations.
+                  </p>
+                  <CreateEventDialog>
+                    <Button>
+                      <Plus className="h-4 w-4 mr-2" />
+                      Créer mon premier événement
                     </Button>
-                  </div>
+                  </CreateEventDialog>
                 </div>
-              ))}
+              ) : (
+                events.map((event) => (
+                  <div key={event.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-accent/50 transition-colors">
+                    <div className="flex items-center space-x-4">
+                      <div className="p-2 rounded-full bg-primary/10">
+                        {getLocationIcon(event.location_type)}
+                      </div>
+                      <div>
+                        <h4 className="font-medium">{event.title}</h4>
+                        <p className="text-sm text-muted-foreground">
+                          {event.duration} min • {getBookingCount(event.id)} réservations • {getLocationLabel(event.location_type)}
+                        </p>
+                        {event.price && event.price > 0 && (
+                          <p className="text-sm font-medium text-green-600">
+                            {event.price}€
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Badge variant={event.is_active ? "default" : "secondary"}>
+                        {event.is_active ? "Actif" : "Inactif"}
+                      </Badge>
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        onClick={() => toggleEventStatus(event.id, event.is_active)}
+                      >
+                        <Settings className="h-4 w-4" />
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        onClick={() => handleDeleteEvent(event.id)}
+                      >
+                        <Trash2 className="h-4 w-4 text-destructive" />
+                      </Button>
+                    </div>
+                  </div>
+                ))
+              )}
             </CardContent>
           </Card>
 
@@ -179,18 +242,52 @@ const Dashboard = () => {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              {recentBookings.map((booking) => (
-                <div key={booking.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-accent/50 transition-colors">
-                  <div>
-                    <h4 className="font-medium">{booking.title}</h4>
-                    <p className="text-sm text-muted-foreground">{booking.client}</p>
-                    <p className="text-xs text-muted-foreground">{booking.date}</p>
+              {loading ? (
+                // Skeleton loading
+                Array.from({ length: 3 }).map((_, i) => (
+                  <div key={i} className="flex items-center justify-between p-4 border rounded-lg">
+                    <div className="space-y-2">
+                      <Skeleton className="h-4 w-32" />
+                      <Skeleton className="h-3 w-24" />
+                      <Skeleton className="h-3 w-28" />
+                    </div>
+                    <Skeleton className="h-6 w-16" />
                   </div>
-                  <Badge variant={booking.status === "confirmed" ? "default" : "secondary"}>
-                    {booking.status}
-                  </Badge>
+                ))
+              ) : bookings.length === 0 ? (
+                <div className="text-center py-8">
+                  <Clock className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                  <h3 className="text-lg font-medium mb-2">Aucune réservation</h3>
+                  <p className="text-muted-foreground">
+                    Les réservations de vos clients apparaîtront ici.
+                  </p>
                 </div>
-              ))}
+              ) : (
+                bookings.slice(0, 5).map((booking) => {
+                  const eventType = events.find(e => e.id === booking.event_type_id);
+                  return (
+                    <div key={booking.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-accent/50 transition-colors">
+                      <div>
+                        <h4 className="font-medium">{eventType?.title || 'Événement supprimé'}</h4>
+                        <p className="text-sm text-muted-foreground">{booking.client_name}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {format(new Date(booking.scheduled_at), 'PPP à HH:mm', { locale: fr })}
+                        </p>
+                      </div>
+                      <Badge variant={
+                        booking.status === "confirmed" ? "default" : 
+                        booking.status === "pending" ? "secondary" :
+                        booking.status === "cancelled" ? "destructive" : "outline"
+                      }>
+                        {booking.status === "confirmed" && "Confirmé"}
+                        {booking.status === "pending" && "En attente"}
+                        {booking.status === "cancelled" && "Annulé"}
+                        {booking.status === "completed" && "Terminé"}
+                      </Badge>
+                    </div>
+                  );
+                })
+              )}
             </CardContent>
           </Card>
         </div>
