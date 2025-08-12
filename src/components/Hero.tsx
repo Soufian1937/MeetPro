@@ -29,7 +29,7 @@ const Hero = () => {
               <Button 
                 variant="hero" 
                 size="lg" 
-                className="text-lg px-8 py-6"
+                className="text-lg px-8 py-6 pulse-glow"
                 onClick={() => navigate('/auth')}
               >
                 Commencer gratuitement
@@ -44,30 +44,30 @@ const Hero = () => {
               </Button>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pt-8">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pt-8 floating">
               <div className="flex flex-col items-center space-y-2 group">
-                <div className="p-3 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors">
+                <div className="p-3 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-all duration-300 group-hover:scale-110 group-hover:rotate-12">
                   <Calendar className="h-6 w-6 text-primary" />
                 </div>
                 <span className="text-sm font-medium">Calendriers multiples</span>
               </div>
               
               <div className="flex flex-col items-center space-y-2 group">
-                <div className="p-3 rounded-full bg-accent/10 group-hover:bg-accent/20 transition-colors">
+                <div className="p-3 rounded-full bg-accent/10 group-hover:bg-accent/20 transition-all duration-300 group-hover:scale-110 group-hover:rotate-12">
                   <Clock className="h-6 w-6 text-accent" />
                 </div>
                 <span className="text-sm font-medium">Disponibilité flexible</span>
               </div>
               
               <div className="flex flex-col items-center space-y-2 group">
-                <div className="p-3 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors">
+                <div className="p-3 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-all duration-300 group-hover:scale-110 group-hover:rotate-12">
                   <Users className="h-6 w-6 text-primary" />
                 </div>
                 <span className="text-sm font-medium">Réunions collaboratives</span>
               </div>
               
               <div className="flex flex-col items-center space-y-2 group">
-                <div className="p-3 rounded-full bg-accent/10 group-hover:bg-accent/20 transition-colors">
+                <div className="p-3 rounded-full bg-accent/10 group-hover:bg-accent/20 transition-all duration-300 group-hover:scale-110 group-hover:rotate-12">
                   <Zap className="h-6 w-6 text-accent" />
                 </div>
                 <span className="text-sm font-medium">Intégrations avancées</span>
@@ -75,19 +75,19 @@ const Hero = () => {
             </div>
           </div>
 
-          <div className="relative animate-slide-up">
+          <div className="relative animate-slide-up floating">
             <div className="relative rounded-2xl overflow-hidden shadow-2xl">
               <img 
                 src={heroImage} 
                 alt="Interface de planification MeetSync" 
-                className="w-full h-auto"
+                className="w-full h-auto hover:scale-105 transition-transform duration-500"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-primary/20 via-transparent to-transparent"></div>
             </div>
             
             {/* Floating elements */}
-            <div className="absolute -top-6 -right-6 w-24 h-24 rounded-full hero-gradient opacity-20 blur-xl animate-pulse"></div>
-            <div className="absolute -bottom-8 -left-8 w-32 h-32 rounded-full bg-accent/20 blur-xl animate-pulse delay-300"></div>
+            <div className="absolute -top-6 -right-6 w-24 h-24 rounded-full hero-gradient opacity-20 blur-xl animate-pulse floating"></div>
+            <div className="absolute -bottom-8 -left-8 w-32 h-32 rounded-full bg-accent/20 blur-xl animate-pulse delay-300 floating"></div>
           </div>
         </div>
       </div>

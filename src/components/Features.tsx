@@ -99,10 +99,13 @@ const Features = () => {
           {features.map((feature, index) => (
             <Card 
               key={index} 
-              className="card-hover group cursor-pointer border-0 shadow-lg bg-card/50 backdrop-blur-sm"
+              className="card-hover card-3d group cursor-pointer border-0 shadow-lg bg-card/50 backdrop-blur-sm transform-gpu"
+              style={{
+                animationDelay: `${index * 0.1}s`,
+              }}
             >
               <CardHeader className="space-y-4">
-                <div className={`w-12 h-12 rounded-lg bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
+                <div className={`w-12 h-12 rounded-lg bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center group-hover:scale-110 group-hover:rotate-12 transition-all duration-500`}>
                   <feature.icon className={`h-6 w-6 ${feature.color}`} />
                 </div>
                 <CardTitle className="text-xl group-hover:text-primary transition-colors">
@@ -114,6 +117,9 @@ const Features = () => {
                   {feature.description}
                 </CardDescription>
               </CardContent>
+              
+              {/* Effet de brillance 3D */}
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out" />
             </Card>
           ))}
         </div>

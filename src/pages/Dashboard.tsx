@@ -19,6 +19,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useEvents } from "@/hooks/useEvents";
 import Header from "@/components/Header";
 import CreateEventDialog from "@/components/CreateEventDialog";
+import EventManagement from "@/components/EventManagement";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 
@@ -190,44 +191,20 @@ const Dashboard = () => {
                   </CreateEventDialog>
                 </div>
               ) : (
-                events.map((event) => (
-                  <div key={event.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-accent/50 transition-colors">
-                    <div className="flex items-center space-x-4">
-                      <div className="p-2 rounded-full bg-primary/10">
-                        {getLocationIcon(event.location_type)}
-                      </div>
-                      <div>
-                        <h4 className="font-medium">{event.title}</h4>
-                        <p className="text-sm text-muted-foreground">
-                          {event.duration} min • {getBookingCount(event.id)} réservations • {getLocationLabel(event.location_type)}
-                        </p>
-                        {event.price && event.price > 0 && (
-                          <p className="text-sm font-medium text-green-600">
-                            {event.price}€
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Badge variant={event.is_active ? "default" : "secondary"}>
-                        {event.is_active ? "Actif" : "Inactif"}
-                      </Badge>
-                      <Button 
-                        variant="ghost" 
-                        size="sm"
-                        onClick={() => toggleEventStatus(event.id, event.is_active)}
-                      >
-                        <Settings className="h-4 w-4" />
-                      </Button>
-                      <Button 
-                        variant="ghost" 
-                        size="sm"
-                        onClick={() => handleDeleteEvent(event.id)}
-                      >
-                        <Trash2 className="h-4 w-4 text-destructive" />
-                      </Button>
-                    </div>
-                  </div>
+                <div className="space-y-6">
+                  {events.map((event) => (
+                    <EventManagement
+                      key={event.id}
+                      event={event}
+                      onEdit={(updatedEvent) => {
+                        // L'événement sera automatiquement mis à jour via le hook useEvents
+                      }}
+                      onDelete={(eventId) => {
+                        // L'événement sera automatiquement supprimé via le hook useEvents
+                      }}
+                    />
+                  ))}
+                </div>
                 ))
               )}
             </CardContent>
