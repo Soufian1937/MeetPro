@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { useEvents } from '../hooks/useEvents';
 import CreateEventDialog from '../components/CreateEventDialog';
-import { EventManagement } from '../components/EventManagement';
+import EventManagement from '../components/EventManagement';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Calendar, Plus, Settings, Users } from 'lucide-react';
