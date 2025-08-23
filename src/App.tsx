@@ -7,6 +7,7 @@ import { AuthProvider } from "@/hooks/useAuth";
 import Index from "./pages/Index";
 import ProtectedDashboard from "./pages/ProtectedDashboard";
 import Auth from "./pages/Auth";
+import Contact from "./pages/Contact";
 import BookingPage from "./pages/BookingPage";
 import NotFound from "./pages/NotFound";
 
@@ -22,6 +23,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<Auth />} />
+            <Route path="/contact" element={<Contact />} />
             <Route path="/dashboard" element={<ProtectedDashboard />} />
             <Route path="/book/:eventId" element={<BookingPage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

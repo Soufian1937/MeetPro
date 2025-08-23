@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 const pricingPlans = [
   {
     name: "Gratuit",
-    price: "0€",
+    price: "Free",
     period: "/mois",
     description: "Parfait pour commencer",
     icon: Star,
@@ -15,8 +15,8 @@ const pricingPlans = [
     bgGradient: "from-gray-50 to-gray-100",
     borderColor: "border-gray-200",
     features: [
-      "1 type d'événement",
-      "10 réservations/mois",
+      "Types d'événements illimités",
+      "10 événements/mois maximum",
       "Calendrier de base",
       "Support email",
       "Intégration calendrier simple"
@@ -30,7 +30,7 @@ const pricingPlans = [
   },
   {
     name: "Pro",
-    price: "5€",
+    price: "2€",
     period: "/mois",
     description: "Pour les professionnels",
     icon: Zap,
@@ -53,7 +53,7 @@ const pricingPlans = [
   },
   {
     name: "Business",
-    price: "10€",
+    price: "5€",
     period: "/mois",
     description: "Pour les équipes",
     icon: Crown,
