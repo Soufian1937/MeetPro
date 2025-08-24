@@ -41,6 +41,11 @@ export default function CreateEventDialog({ children }: CreateEventDialogProps) 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!formData.title.trim()) {
+      return;
+    }
+    
     setLoading(true);
 
     try {
@@ -79,7 +84,7 @@ export default function CreateEventDialog({ children }: CreateEventDialogProps) 
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         {children || (
-          <Button variant="outline" size="sm">
+          <Button>
             <Plus className="h-4 w-4 mr-2" />
             Créer un événement
           </Button>

@@ -105,6 +105,7 @@ export default function Dashboard() {
               </p>
             </div>
             <CreateEventDialog>
+              <Button>
               <Plus className="h-4 w-4 mr-2" />
               Créer un Événement
             </Button>
@@ -126,6 +127,7 @@ export default function Dashboard() {
                   Créez votre premier type d'événement pour commencer à accepter des réservations
                 </p>
                 <CreateEventDialog>
+                  <Button>
                   <Plus className="h-4 w-4 mr-2" />
                   Créer un Événement
                 </Button>

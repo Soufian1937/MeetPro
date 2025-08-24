@@ -42,6 +42,7 @@ export function useEvents() {
   // Charger les réservations
   const fetchBookings = async () => {
     if (!user) return;
+    if (events.length === 0) return;
 
     try {
       const { data, error } = await supabase
@@ -73,6 +74,9 @@ export function useEvents() {
     if (!user) return null;
 
     try {
+      console.log('Creating event with data:', eventData);
+      console.log('User ID:', user.id);
+      
       const { data, error } = await supabase
         .from('events')
         .insert({
@@ -82,7 +86,12 @@ export function useEvents() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase error:', error);
+        throw error;
+      }
+
+      console.log('Event created successfully:', data);
 
       setEvents(prev => [data, ...prev]);
       toast({
@@ -96,7 +105,7 @@ export function useEvents() {
       toast({
         variant: "destructive",
         title: "Erreur",
-        description: "Impossible de créer l'événement",
+        description: `Impossible de créer l'événement: ${error.message || 'Erreur inconnue'}`,
       });
       return null;
     }
@@ -219,7 +228,9 @@ export function useEvents() {
     updateBookingStatus,
     refetch: () => {
       fetchEvents();
-      fetchBookings();
+      if (events.length > 0) {
+        fetchBookings();
+      }
     }
   };
 }
