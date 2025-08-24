@@ -28,7 +28,7 @@ import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import type { Database } from '@/integrations/supabase/types';
 
-type EventType = Database['public']['Tables']['event_types']['Row'];
+type EventType = Database['public']['Tables']['events']['Row'];
 type LocationType = Database['public']['Enums']['location_type'];
 
 interface EventManagementProps {

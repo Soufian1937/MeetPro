@@ -56,7 +56,7 @@ export type Database = {
             foreignKeyName: "bookings_event_type_id_fkey"
             columns: ["event_type_id"]
             isOneToOne: false
-            referencedRelation: "event_types"
+            referencedRelation: "events"
             referencedColumns: ["id"]
           },
         ]
@@ -104,6 +104,56 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "event_types_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      events: {
+        Row: {
+          created_at: string
+          description: string | null
+          duration: number
+          id: string
+          is_active: boolean
+          location_details: string | null
+          location_type: Database["public"]["Enums"]["location_type"]
+          price: number | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          duration?: number
+          id?: string
+          is_active?: boolean
+          location_details?: string | null
+          location_type?: Database["public"]["Enums"]["location_type"]
+          price?: number | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          duration?: number
+          id?: string
+          is_active?: boolean
+          location_details?: string | null
+          location_type?: Database["public"]["Enums"]["location_type"]
+          price?: number | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "events_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"

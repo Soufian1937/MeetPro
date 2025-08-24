@@ -4,9 +4,9 @@ import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import type { Database } from '@/integrations/supabase/types';
 
-type EventType = Database['public']['Tables']['event_types']['Row'];
-type EventTypeInsert = Database['public']['Tables']['event_types']['Insert'];
-type EventTypeUpdate = Database['public']['Tables']['event_types']['Update'];
+type EventType = Database['public']['Tables']['events']['Row'];
+type EventTypeInsert = Database['public']['Tables']['events']['Insert'];
+type EventTypeUpdate = Database['public']['Tables']['events']['Update'];
 type Booking = Database['public']['Tables']['bookings']['Row'];
 
 export function useEvents() {
@@ -22,7 +22,7 @@ export function useEvents() {
 
     try {
       const { data, error } = await supabase
-        .from('event_types')
+        .from('events')
         .select('*')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
@@ -48,7 +48,7 @@ export function useEvents() {
         .from('bookings')
         .select(`
           *,
-          event_types (
+          events (
             title,
             duration
           )
@@ -74,7 +74,7 @@ export function useEvents() {
 
     try {
       const { data, error } = await supabase
-        .from('event_types')
+        .from('events')
         .insert({
           ...eventData,
           user_id: user.id,
@@ -106,7 +106,7 @@ export function useEvents() {
   const updateEvent = async (id: string, eventData: EventTypeUpdate) => {
     try {
       const { data, error } = await supabase
-        .from('event_types')
+        .from('events')
         .update(eventData)
         .eq('id', id)
         .select()
@@ -139,7 +139,7 @@ export function useEvents() {
   const deleteEvent = async (id: string) => {
     try {
       const { error } = await supabase
-        .from('event_types')
+        .from('events')
         .delete()
         .eq('id', id);
 

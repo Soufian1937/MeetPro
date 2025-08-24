@@ -106,7 +106,27 @@ export default function Dashboard() {
             </Button>
           </div>
 
-          <EventManagement />
+          {events && events.length > 0 ? (
+            <div className="space-y-6">
+              {events.map((event) => (
+                <EventManagement key={event.id} event={event} />
+              ))}
+            </div>
+          ) : (
+            <Card>
+              <CardContent className="text-center py-12">
+                <Calendar className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-gray-900 mb-2">No event types yet</h3>
+                <p className="text-gray-600 mb-4">
+                  Create your first event type to start accepting bookings
+                </p>
+                <Button onClick={() => setShowCreateDialog(true)}>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Create Event Type
+                </Button>
+              </CardContent>
+            </Card>
+          )}
         </div>
       </main>
 

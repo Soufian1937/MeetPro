@@ -6,7 +6,7 @@ import { Calendar, AlertCircle } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import type { Database } from '@/integrations/supabase/types';
 
-type EventType = Database['public']['Tables']['event_types']['Row'];
+type EventType = Database['public']['Tables']['events']['Row'];
 
 const BookingPage = () => {
   const { eventId } = useParams<{ eventId: string }>();
@@ -24,7 +24,7 @@ const BookingPage = () => {
 
       try {
         const { data, error } = await supabase
-          .from('event_types')
+          .from('events')
           .select('*')
           .eq('id', eventId)
           .eq('is_active', true)
