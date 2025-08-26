@@ -21,13 +21,19 @@ export function useEvents() {
     if (!user) return;
 
     try {
+      console.log('Fetching events for user:', user.id);
       const { data, error } = await supabase
         .from('events')
         .select('*')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching events:', error);
+        throw error;
+      }
+      
+      console.log('Events fetched successfully:', data);
       setEvents(data || []);
     } catch (error) {
       console.error('Error fetching events:', error);
@@ -105,7 +111,7 @@ export function useEvents() {
       toast({
         variant: "destructive",
         title: "Erreur",
-        description: `Impossible de créer l'événement: ${error.message || 'Erreur inconnue'}`,
+        description: `Impossible de créer l'événement: ${error?.message || 'Erreur inconnue'}`,
       });
       return null;
     }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { useEvents } from '../hooks/useEvents';
 import CreateEventDialog from '../components/CreateEventDialog';
@@ -10,6 +10,11 @@ import { Calendar, Plus, Settings, Users, LogOut } from 'lucide-react';
 export default function Dashboard() {
   const { user, signOut } = useAuth();
   const { events, bookings, loading } = useEvents();
+  
+  useEffect(() => {
+    console.log('Dashboard - Events updated:', events);
+    console.log('Dashboard - Bookings updated:', bookings);
+  }, [events, bookings]);
 
   if (loading) {
     return (
@@ -25,6 +30,9 @@ export default function Dashboard() {
   const activeEvents = events?.filter(event => event.is_active) || [];
   const totalBookings = bookings?.length || 0;
   const confirmedBookings = bookings?.filter(b => b.status === 'confirmed').length || 0;
+  
+  console.log('Dashboard render - Active events:', activeEvents.length);
+  console.log('Dashboard render - Total events:', events?.length || 0);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-primary/5">
@@ -106,9 +114,9 @@ export default function Dashboard() {
             </div>
             <CreateEventDialog>
               <Button>
-              <Plus className="h-4 w-4 mr-2" />
-              Créer un Événement
-            </Button>
+                <Plus className="h-4 w-4 mr-2" />
+                Créer un Événement
+              </Button>
             </CreateEventDialog>
           </div>
 
@@ -128,9 +136,9 @@ export default function Dashboard() {
                 </p>
                 <CreateEventDialog>
                   <Button>
-                  <Plus className="h-4 w-4 mr-2" />
-                  Créer un Événement
-                </Button>
+                    <Plus className="h-4 w-4 mr-2" />
+                    Créer un Événement
+                  </Button>
                 </CreateEventDialog>
               </CardContent>
             </Card>

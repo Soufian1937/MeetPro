@@ -43,14 +43,21 @@ export default function CreateEventDialog({ children }: CreateEventDialogProps) 
     e.preventDefault();
     
     if (!formData.title.trim()) {
+      toast({
+        variant: "destructive",
+        title: "Erreur",
+        description: "Le titre de l'événement est requis",
+      });
       return;
     }
     
     setLoading(true);
 
     try {
+      console.log('Submitting form with data:', formData);
       const result = await createEvent(formData);
       if (result) {
+        console.log('Event created successfully, closing dialog');
         setOpen(false);
         setFormData({
           title: '',
@@ -61,6 +68,8 @@ export default function CreateEventDialog({ children }: CreateEventDialogProps) 
           location_details: '',
           is_active: true,
         });
+      } else {
+        console.log('Event creation failed');
       }
     } finally {
       setLoading(false);
