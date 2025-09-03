@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/dialog';
 import { Plus, Video, Users, Phone } from 'lucide-react';
 import { useEvents } from '@/hooks/useEvents';
+import { useToast } from '@/hooks/use-toast';
 import type { Database } from '@/integrations/supabase/types';
 
 type LocationType = Database['public']['Enums']['location_type'];

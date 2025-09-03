@@ -3,6 +3,7 @@ import { useAuth } from '../hooks/useAuth';
 import { useEvents } from '../hooks/useEvents';
 import CreateEventDialog from '../components/CreateEventDialog';
 import EventManagement from '../components/EventManagement';
+import PricingUpgrade from '../components/PricingUpgrade';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Calendar, Plus, Settings, Users, LogOut } from 'lucide-react';
@@ -30,6 +31,11 @@ export default function Dashboard() {
   const activeEvents = events?.filter(event => event.is_active) || [];
   const totalBookings = bookings?.length || 0;
   const confirmedBookings = bookings?.filter(b => b.status === 'confirmed').length || 0;
+  
+  // Logique du plan gratuit
+  const currentPlan = 'free'; // Pour l'instant, tous les utilisateurs sont sur le plan gratuit
+  const maxEventsForFreePlan = 10;
+  const canCreateMoreEvents = events.length < maxEventsForFreePlan;
   
   console.log('Dashboard render - Active events:', activeEvents.length);
   console.log('Dashboard render - Total events:', events?.length || 0);
@@ -103,6 +109,15 @@ export default function Dashboard() {
           </Card>
         </div>
 
+        {/* Pricing Upgrade Section - Affiché seulement pour le plan gratuit */}
+        {currentPlan === 'free' && (
+          <PricingUpgrade 
+            currentPlan={currentPlan}
+            eventsCount={events.length}
+            maxEvents={maxEventsForFreePlan}
+          />
+        )}
+
         {/* Event Management Section */}
         <div className="space-y-6">
           <div className="flex justify-between items-center">
@@ -112,12 +127,26 @@ export default function Dashboard() {
                 Créez et gérez vos types d'événements réservables
               </p>
             </div>
-            <CreateEventDialog>
-              <Button>
+            {canCreateMoreEvents ? (
+              <CreateEventDialog>
+                <Button>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Créer un Événement
+                </Button>
+              </CreateEventDialog>
+            ) : (
+              <Button 
+                variant="outline" 
+                onClick={() => window.location.href = '/#pricing'}
+                className="relative"
+              >
                 <Plus className="h-4 w-4 mr-2" />
                 Créer un Événement
+                <span className="absolute -top-2 -right-2 bg-orange-500 text-white text-xs px-1.5 py-0.5 rounded-full">
+                  Pro
+                </span>
               </Button>
-            </CreateEventDialog>
+            )}
           </div>
 
           {events && events.length > 0 ? (
@@ -134,12 +163,22 @@ export default function Dashboard() {
                 <p className="text-muted-foreground mb-4">
                   Créez votre premier type d'événement pour commencer à accepter des réservations
                 </p>
-                <CreateEventDialog>
-                  <Button>
+                {canCreateMoreEvents ? (
+                  <CreateEventDialog>
+                    <Button>
+                      <Plus className="h-4 w-4 mr-2" />
+                      Créer un Événement
+                    </Button>
+                  </CreateEventDialog>
+                ) : (
+                  <Button 
+                    variant="outline" 
+                    onClick={() => window.location.href = '/#pricing'}
+                  >
                     <Plus className="h-4 w-4 mr-2" />
-                    Créer un Événement
+                    Créer un Événement (Pro)
                   </Button>
-                </CreateEventDialog>
+                )}
               </CardContent>
             </Card>
           )}
